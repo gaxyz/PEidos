@@ -1,0 +1,31 @@
+initialize(){
+    setSeed(seed);
+    initializeMutationRate(1e-07);
+    initializeMutationType("m1",0.5,"f",0.0);
+    initializeMutationType("m2",0.5,"f",0.0);
+    initializeGenomicElementType("g1",m1,1.0);
+    
+    initializeGenomicElement(g1,0,999999);
+    
+    initializeRecombinationRate(1e-08);
+    
+    }
+////////////////////////
+1 {
+    writeFile(paste0(c(outdir,"pop_sizes.txt")), "population size generation", append = F);
+    defineConstant("simID", getSeed());
+    sim.addSubpop("p1",200);
+    }
+////////////////////////
+1800 { sim.addSubpopSplit("p2",200, p1 );}
+////////////////////////
+1830 { sim.addSubpopSplit("p4",200, p2 );}
+////////////////////////
+1840 { sim.addSubpopSplit("p3",200, p2 );}
+////////////////////////
+1930 late(){
+p2.outputVCFSample(sampleSize=50,replace=F,outputMultiallelics=F,filePath=paste0(c(outdir,"p2.vcf")));
+p3.outputVCFSample(sampleSize=50,replace=F,outputMultiallelics=F,filePath=paste0(c(outdir,"p3.vcf")));
+p4.outputVCFSample(sampleSize=50,replace=F,outputMultiallelics=F,filePath=paste0(c(outdir,"p4.vcf")));
+p1.outputVCFSample(sampleSize=50,replace=F,outputMultiallelics=F,filePath=paste0(c(outdir,"p1.vcf")));
+sim.simulationFinished();}
