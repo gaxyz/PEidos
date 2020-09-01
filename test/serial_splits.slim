@@ -35,7 +35,10 @@ initialize(){
 ////////////////////////
 1880 { sim.addSubpopSplit("p9",200, p10 );}
 ////////////////////////
-2340 late(){
+1920 {p3.setMigrationRates( p5, 0.5 );}
+1921 {p3.setMigrationRates( p5, 0 );}
+////////////////////////
+1930 late(){
 p10.outputVCFSample(sampleSize=50,replace=F,outputMultiallelics=F,filePath=paste0(c(outdir,"p10.vcf")));
 p9.outputVCFSample(sampleSize=50,replace=F,outputMultiallelics=F,filePath=paste0(c(outdir,"p9.vcf")));
 p8.outputVCFSample(sampleSize=50,replace=F,outputMultiallelics=F,filePath=paste0(c(outdir,"p8.vcf")));

@@ -1,1 +1,5 @@
 testing_*
+utils
+__pycache__
+*.vcf
+*.txt
