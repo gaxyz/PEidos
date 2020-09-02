@@ -29,10 +29,10 @@ tree = trees.read_tree("serial_splits.nwk", 1800)
 config_dict ={
     "mutation_rate":1e-7,
     "recombination_rate":1e-8,
-    "genome_size":999999,
+    "genome_size":4999999,
     "burnin_time":1800,
     "pop_size_filename":"pop_sizes.txt",
-    "simulation_popsize":200,
+    "simulation_popsize":1000,
     "output_sample_size":50,
     "pulse_destination": "p3" ,
     "pulse_source": "p5",
@@ -51,10 +51,9 @@ sim.migration_pulse_neutral(tree, config_dict, script_file)
 
 # Define seed and basename (creates a directory)
 seed = 2020
-tag = "testing"
+tag = "unadmixed_pruned"
 # Run simulation in directory
 sim.slimsim(script_file, seed,".",tag)
-
 
 
 # Get path for simulation directory
@@ -67,9 +66,15 @@ merged_vcf = testPath / "genotypes.vcf"
 # Merge vcfs
 utils.merge_vcf(population_vcfs, str(merged_vcf) )
 # Define plink prefix
-plink_prefix = testPath / "genotypes"
+bed_prefix = testPath / "genotypes"
 # Convert to plink
-utils.vcf_to_bed(str(merged_vcf), str(plink_prefix) )
+utils.vcf_to_bed(str(merged_vcf), str(bed_prefix) )
+# Generate pruned lists
+ld_prefix = testPath / "ld"
+utils.ld_prune( bed_prefix, ld_prefix, 50, 1, 0.9 )
+# Extract independent SNPs
+pruned_prefix = testPath / "genotypes_ldpruned"
+utils.plink_extract(bed_prefix, ld_prefix , pruned_prefix)
 
 
 
@@ -84,7 +89,7 @@ hapflk_d = {
 
 # Run hapflk  
 hapflk_prefix = testPath / "hapflk"
-utils.run_hapFLK( str(plink_prefix),str(hapflk_prefix), hapflk_d )
+utils.run_hapFLK( str(pruned_prefix),str(hapflk_prefix), hapflk_d )
 
 
 

@@ -194,18 +194,6 @@ def theoretical_covariance(tree):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 def merge_vcf( vcf_files , outfile):
     """
     Merge several vcf files into a single VCF file using pandas.
@@ -247,6 +235,41 @@ def vcf_to_bed(vcf_file, output_prefix):
     sys.stdout.write(  "DONE!\n"  )
 
 
+def ld_prune(bed_prefix, list_prefix,
+             window_size,
+             step_size,
+             r_squared):
+    """
+    Wrapper for LD pruning of SNPs using PLINK.
+    Generates lists of excluded and included SNPs.
+    """
+    
+    sys.stdout.write("PERFORMING LD PRUNING...\n")    
+
+    s = ["plink", "--bfile", bed_prefix, "--out", list_prefix,
+         "--indep-pairwise", str(window_size), 
+         str(step_size), str(r_squared) ]
+
+    sys.stdout.write("--> COMPUTING CORRELATIONS...\n")
+    subprocess.run(s)
+
+    sys.stdout.write("DONE!\n")
+        
+
+
+def plink_extract( bed_prefix , list_file , bed_outfile_prefix  ):
+    """
+    Wrapper for extracting SNPs from a bed file specified in a list.
+    """
+    sys.stdout.write("--> EXTRACTING INDEPENDENT SNPs...\n")
+    
+    list_file = list_file.with_suffix('.prune.in')
+    
+    
+    s = ["plink", "--bfile", bed_prefix, 
+         "--extract", list_file, "--make-bed",
+         "--out", bed_outfile_prefix ]
+    subprocess.run(s)
 
 def run_hapFLK(file_prefix,outfile_prefix,d):
     """

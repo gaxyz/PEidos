@@ -58,6 +58,7 @@ class SlimScript():
                                                                 source )
         self.splits.append(s)   
     
+
     def admixture_pulse(self,destination,source,rate,generation):
         
         """This function turns a population leaf into an admixed leaf.
@@ -73,6 +74,13 @@ class SlimScript():
                                                              rate,
                                                              generation + 1,
                                                              0)
+
+    def migration(self,destination,source,rate,generation):
+        """ Migration is unidirectional """
+        s ='{0} {{{1}.setMigrationRates( {2}, {3} );}}\n'.format(generation,
+                                                             destination,
+                                                             source,
+                                                             rate)
         self.migrations.append(s)
     
     def add_mutation(self,mutation_name, population, generation, mutation_site):
