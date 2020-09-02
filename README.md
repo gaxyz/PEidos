@@ -2,9 +2,9 @@
 
 **P**ython writes **Eidos** is a package that allows you to automate the writing of Eidos/SLiM scripts under very constrained specifications. 
 
-It is written to take a tree in .nwk format thatrepresents a tree-like population demography with generation time as branch lengths as input and output a SLiM script that replicates the tree's topology.
+It is written to take a nwk tree in as input and output a SLiM script that replicates the tree's topology.
 
-This Newark formatted tree represents a tree-like population demography where generation time is specified in branch lengths. Leaves should be named under SLiM's requirements (p[0-9]\*), internal nodes should be named arbitrarily. 
+This Newick formatted tree represents a tree-like population demography where generation time is specified in branch lengths. Leaves should be named under SLiM's requirements (p[0-9]\*), internal nodes should be named arbitrarily. 
 
 Pulse-like and continuous admixture events can be specified (these can happen once populations have achieved tree topology in the simulation).
 
