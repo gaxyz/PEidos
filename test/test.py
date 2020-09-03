@@ -27,7 +27,7 @@ tree = trees.read_tree("serial_splits.nwk", 1800)
 
 # Simulation config dict
 config_dict ={
-    "mutation_rate":1e-7,
+    "mutation_rate":1e-8,
     "recombination_rate":1e-8,
     "genome_size":4999999,
     "burnin_time":1800,
@@ -39,19 +39,26 @@ config_dict ={
     "pulse_rate": 0.5,
     "pulse_generation": 1920 ,
     "post_admixture_time": 10 ,
+    "selected_pops": ["p3","p5"],
+    "mutation_site": 100000,
+    "mutation_fitness": 2.0,
+    "time_after_last_split":30
+    
     }
 
 # Define final script name
-script_file = "serial_splits.slim"
+script_file = "treelike_selection.slim"
 # TREELIKE NEUTRAL
 #sim.treelike_neutral(tree,config_dict,script_file)
 # MIGRATION PULSE 
-sim.migration_pulse_neutral(tree, config_dict, script_file)
+#sim.migration_pulse_neutral(tree, config_dict, script_file)
+sim.treelike_selection(tree, config_dict, script_file)
+
 
 
 # Define seed and basename (creates a directory)
 seed = 2020
-tag = "unadmixed_pruned"
+tag = "treelike_selection_pruned"
 # Run simulation in directory
 sim.slimsim(script_file, seed,".",tag)
 
@@ -90,7 +97,6 @@ hapflk_d = {
 # Run hapflk  
 hapflk_prefix = testPath / "hapflk"
 utils.run_hapFLK( str(pruned_prefix),str(hapflk_prefix), hapflk_d )
-
 
 
 

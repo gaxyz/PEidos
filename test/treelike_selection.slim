@@ -12,7 +12,6 @@ initialize(){
         }
 ////////////////////////
 1 {
-        writeFile(paste0(c(outdir,"pop_sizes.txt")), "population size generation",append = F);
         defineConstant("simID", getSeed());
         sim.addSubpop("p1",1000);
         }
@@ -35,10 +34,39 @@ initialize(){
 ////////////////////////
 1880 { sim.addSubpopSplit("p9",1000, p10 );}
 ////////////////////////
-1920 {p3.setMigrationRates( p5, 0.5 );}
-1921 {p3.setMigrationRates( p5, 0 );}
+2 late(){sim.outputFull("/tmp/slim_"+simID+".txt");
+                          target = sample(p1.genomes,1);
+                          target.addNewDrawnMutation(m2,100000);
+                          }
 ////////////////////////
-1930 late(){
+1799: mutation(m1){return F;}
+1900: fitness(m2,p5){ return 2.0 ; }
+2: late(){
+                        mut = sim.mutationsOfType( m2 ) ;
+                        
+                        if ( size(mut) == 1 )
+                        {
+                        
+                            if (sim.mutationFrequencies(NULL,mut) >= 0.5 )
+                            {
+                                cat( simID + ": ESTABLISHED -- PROCEEDING WITH SPLIT\n" ) ;
+                                sim.deregisterScriptBlock(self);
+                            }
+                        }
+                        else
+                        {
+                                cat(simID + " GENERATION: "+ sim.generation +": LOST BEFORE ESTABLISHMENT -- RESTARTING \n");
+                                // back to gen 1800
+                                sim.readFromPopulationFile( "/tmp/slim_" + simID + ".txt" );
+                                // start newly seeded run
+                                setSeed( rdunif(1,0,asInteger(2^62) - 1 ));
+                        
+                                // re introduce the sweep mutation
+                                target = sample( p1.genomes, 1 );
+                                target.addNewDrawnMutation( m2, 100000 );
+                        }
+                        }
+1920 late(){
 p10.outputVCFSample(sampleSize=50,replace=F,outputMultiallelics=F,filePath=paste0(c(outdir,"p10.vcf")));
 p9.outputVCFSample(sampleSize=50,replace=F,outputMultiallelics=F,filePath=paste0(c(outdir,"p9.vcf")));
 p8.outputVCFSample(sampleSize=50,replace=F,outputMultiallelics=F,filePath=paste0(c(outdir,"p8.vcf")));

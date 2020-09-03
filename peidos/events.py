@@ -12,7 +12,7 @@ class SlimScript():
         self.initialization = ""
         self.setup_config = ""
         self.splits = []
-        self.migrations = []
+        self.migrations = [] 
         self.mutation = ""
         self.supressed_mutation = ""
         self.fitness = ""
@@ -42,7 +42,6 @@ class SlimScript():
 
     def setup(self,pop_size_filename, first_pop_name, first_pop_size):
         s = '''1 {{
-        writeFile(paste0(c(outdir,"{0}")), "population size generation",append = F);
         defineConstant("simID", getSeed());
         sim.addSubpop("{1}",{2});
         }}\n'''.format(pop_size_filename,
@@ -74,6 +73,7 @@ class SlimScript():
                                                              rate,
                                                              generation + 1,
                                                              0)
+        self.migrations.append(s)
 
     def migration(self,destination,source,rate,generation):
         """ Migration is unidirectional """
@@ -84,7 +84,7 @@ class SlimScript():
         self.migrations.append(s)
     
     def add_mutation(self,mutation_name, population, generation, mutation_site):
-        s= ''''{0} late(){{sim.outputFull("/tmp/slim_"+simID+".txt");
+        s= '''{0} late(){{sim.outputFull("/tmp/slim_"+simID+".txt");
                           target = sample({1}.genomes,1);
                           target.addNewDrawnMutation({2},{3});
                           }}\n'''.format(generation,
@@ -94,7 +94,7 @@ class SlimScript():
                                         )
         self.mutation = s
 
-    def supress_mutations(self,generation, mutation_name):    
+    def supress_mutation(self,generation, mutation_name):    
         s = '{0}: mutation({1}){{return F;}}\n'.format(generation, mutation_name)
         self.supressed_mutation = s
     
@@ -130,15 +130,15 @@ class SlimScript():
                         if ( size(mut) == 1 )
                         {{
                         
-                            if (sim.mutationFrequencies(NULL,mut) > 0.2 )
+                            if (sim.mutationFrequencies(NULL,mut) >= 0.5 )
                             {{
-                                cat( simID + ": ESTABLISHED -- PROCEEDING WITH SPLIT\n" ) ;
+                                cat( simID + ": ESTABLISHED -- PROCEEDING WITH SPLIT\\n" ) ;
                                 sim.deregisterScriptBlock(self);
                             }}
                         }}
                         else
                         {{
-                                cat(simID + " GENERATION: "+ sim.generation +": LOST BEFORE ESTABLISHMENT -- RESTARTING \n");
+                                cat(simID + " GENERATION: "+ sim.generation +": LOST BEFORE ESTABLISHMENT -- RESTARTING \\n");
                                 // back to gen 1800
                                 sim.readFromPopulationFile( "/tmp/slim_" + simID + ".txt" );
                                 // start newly seeded run
