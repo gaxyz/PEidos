@@ -34,6 +34,9 @@ initialize(){
 ////////////////////////
 1880 { sim.addSubpopSplit("p9",1000, p10 );}
 ////////////////////////
+1920 {p3.setMigrationRates( p5, 0.5 );}
+1921 {p3.setMigrationRates( p5, 0 );}
+////////////////////////
 2 late(){sim.outputFull("/tmp/slim_"+simID+".txt");
                           target = sample(p1.genomes,1);
                           target.addNewDrawnMutation(m2,100000);

@@ -53,12 +53,13 @@ script_file = "treelike_selection.slim"
 # MIGRATION PULSE 
 #sim.migration_pulse_neutral(tree, config_dict, script_file)
 sim.treelike_selection(tree, config_dict, script_file)
-
+# MIGRATION SELECTION
+sim.migration_pulse_selection(tree, config_dict, script_file)
 
 
 # Define seed and basename (creates a directory)
 seed = 2020
-tag = "treelike_selection_pruned"
+tag = "migration_selection_pruned"
 # Run simulation in directory
 sim.slimsim(script_file, seed,".",tag)
 
@@ -90,7 +91,7 @@ utils.plink_extract(bed_prefix, ld_prefix , pruned_prefix)
 hapflk_d = {
     "ncpu":3,
     "reynold_snps": 1500,
-    "nfit": 3,
+    "nfit": 10,
     "K": 5
     }
 
