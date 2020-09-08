@@ -8,7 +8,7 @@ This Newick formatted tree represents a tree-like population demography where ge
 
 Pulse-like and continuous admixture events can be specified (these can happen once populations have achieved tree topology in the simulation).
 
-So far, only neutral scenarios are functinal. I plan on adding advantageous mutations and restart conditional on adaptive mutation loss.
+So far, only neutral scenarios are functional. I plan on adding advantageous mutations and restart conditional on adaptive mutation loss.
 
 
 ## Eidos is already a scripting language. Y U DO DIS?
