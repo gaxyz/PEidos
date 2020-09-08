@@ -4,6 +4,7 @@ import os
 import sys
 from datetime import date
 import subprocess
+import numpy as np
 
 
 class VCF():
@@ -176,20 +177,46 @@ class VCF():
         sys.stdout.write(  "#"*20 + "\n" + "DONE!\n" + "#"*20 + "\n"  )
     
 
-def theoretical_covariance(tree):
+def theoretical_covariance(tree, popsize):
     """
-    
-
     Parameters
     ----------
-    tree : TYPE
-        DESCRIPTION.
+    tree : dendropy.datamomdel.treemodel.Tree (dendropy tree)
+        Dendropy tree that has been read by trees.read_tree(). Which means nodes are properly labeled.
+    
+    popsize: int.
+        (Constant) effectuve population size throughout simulations.
     
     Returns
     -------
     Theoretical covariance matrix for a given tree.
-
     """
+    
+    init_gen = tree.nodes()[0].generation # Get first generation (actually burnin time)
+    pops = tree.leaves # List populations
+    m = np.zeros( ( len(pops),len(pops) ) )   # Matrix for storing distances
+    pdm = tree.phylogenetic_distance_matrix() # Compute patristic distances 
+    for idx, itx in enumerate(tree.taxon_namespace): # Loop through every leaf twice
+        for jdx , jtx in enumerate(tree.taxon_namespace):
+            if idx >= jdx:          # As matrix is symmetrical, only compute lower half
+                mrca_time = pdm.mrca( itx , jtx ).generation - init_gen
+                m[idx,jdx] = mrca_time
+                m[jdx,idx] = mrca_time
+                
+            else: 
+                pass
+    
+    m = pd.DataFrame( m )
+    m.columns = pops
+    m.index = pops
+    
+    c = lambda t,Ne: t/(2*Ne)
+    m = c(m, popsize )
+    
+    return m 
+
+
+
 
 
 
