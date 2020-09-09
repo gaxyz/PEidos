@@ -328,14 +328,16 @@ def run_hapFLK(file_prefix,outfile_prefix,d):
              "--prefix",outfile_prefix,
              "--outgroup", "p1",
              "-K", K , "--nfit", nfit,
-             "--kinship", covariance_file ]
+             "--kinship", covariance_file,
+             "--keep-outgroup"]
     else:
         s = ["hapflk", "--ncpu", ncpu,
              "--reynolds-snps", reynold_snps,
              "--bfile", file_prefix,
              "--prefix",outfile_prefix,
              "--outgroup", "p1",
-             "-K", K , "--nfit", nfit ]
+             "-K", K , "--nfit", nfit,
+             "--keep-outgroup"]
         
     
             
