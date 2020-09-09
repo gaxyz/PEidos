@@ -212,6 +212,9 @@ def theoretical_covariance(tree, popsize):
     
     c = lambda t,Ne: t/(2*Ne)
     m = c(m, popsize )
+    m = m.drop(labels="p1", axis = 0)
+    m = m.drop(labels="p1", axis = 1)
+    
     
     return m 
 
