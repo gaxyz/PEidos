@@ -319,13 +319,26 @@ def run_hapFLK(file_prefix,outfile_prefix,d):
     reynold_snps = str(d["reynold_snps"])
     K = str(d["K"])
     nfit = str(d["nfit"])
+    covariance_file = d["covariance_file"]
     
-    s = ["hapflk", "--ncpu", ncpu,
-         "--reynolds-snps", reynold_snps,
-         "--bfile", file_prefix,
-         "--prefix",outfile_prefix,
-         "--outgroup", "p1",
-         "-K", K , "--nfit", nfit ]
+    if covariance_file:
+        s = ["hapflk", "--ncpu", ncpu,
+             "--reynolds-snps", reynold_snps,
+             "--bfile", file_prefix,
+             "--prefix",outfile_prefix,
+             "--outgroup", "p1",
+             "-K", K , "--nfit", nfit,
+             "--kinship", covariance_file ]
+    else:
+        s = ["hapflk", "--ncpu", ncpu,
+             "--reynolds-snps", reynold_snps,
+             "--bfile", file_prefix,
+             "--prefix",outfile_prefix,
+             "--outgroup", "p1",
+             "-K", K , "--nfit", nfit ]
+        
+    
+            
     sys.stdout.write(  "RUNNING hapFLK on {0}...\n".format(file_prefix)  )
     subprocess.run(s)
     sys.stdout.write(  "DONE!\n"  )
