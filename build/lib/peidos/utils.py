@@ -300,6 +300,7 @@ def plink_extract( bed_prefix , list_file , bed_outfile_prefix  ):
          "--extract", list_file, "--make-bed",
          "--out", bed_outfile_prefix ]
     subprocess.run(s)
+    sys.stdout.write("DONE!\n")
 
 def run_hapFLK(file_prefix,outfile_prefix,d):
     """
