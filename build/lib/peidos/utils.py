@@ -177,6 +177,35 @@ class VCF():
         sys.stdout.write(  "#"*20 + "\n" + "DONE!\n" + "#"*20 + "\n"  )
     
 
+def remove_outgroup( tree , outgroup_label = "p1" ):
+    """
+
+    Parameters
+    ----------
+    tree : dendropy.datamodel.treemodel.Tree
+        Dendropy tree
+    outgroup_label : str
+        outgroup label for removal
+
+    Returns
+    -------
+    None
+
+    """
+    # Clone tree for modificaiton
+    newtree = tree.clone()
+    
+    # Deroot tree
+    newtree.deroot()
+    
+    # Remove outgroup
+    newtree.prune_taxa_with_labels([outgroup_label])
+    
+    
+    return newtree
+
+    
+
 def theoretical_covariance(tree, popsize):
     """
     Parameters
@@ -192,19 +221,32 @@ def theoretical_covariance(tree, popsize):
     Theoretical covariance matrix for a given tree.
     """
     
-    init_gen = tree.nodes()[0].generation # Get first generation (actually burnin time)
+    # Remove outgroup
+    
+    tree = remove_outgroup(tree)
+    
+    init_gen = tree.nodes()[0].generation # Get generation of second split
+    
     pops = tree.leaves # List populations
+    pops.remove("p1")
     m = np.zeros( ( len(pops),len(pops) ) )   # Matrix for storing distances
     pdm = tree.phylogenetic_distance_matrix() # Compute patristic distances 
     for idx, itx in enumerate(tree.taxon_namespace): # Loop through every leaf twice
         for jdx , jtx in enumerate(tree.taxon_namespace):
-            if idx >= jdx:          # As matrix is symmetrical, only compute lower half
-                mrca_time = pdm.mrca( itx , jtx ).generation - init_gen
-                m[idx,jdx] = mrca_time
-                m[jdx,idx] = mrca_time
-                
-            else: 
+            
+            # Ignore p1
+            if itx.label == "p1" or jtx.label == "p1":
                 pass
+            else:
+                if idx >= jdx:          # As matrix is symmetrical, only compute lower half
+                    mrca_time = pdm.mrca( itx , jtx ).generation - init_gen
+                    m[idx,jdx] = mrca_time
+                    m[jdx,idx] = mrca_time
+                    
+                else: 
+                    pass
+    
+    
     
     m = pd.DataFrame( m )
     m.columns = pops
@@ -212,8 +254,6 @@ def theoretical_covariance(tree, popsize):
     
     c = lambda t,Ne: t/(2*Ne)
     m = c(m, popsize )
-    m = m.drop(labels="p1", axis = 0)
-    m = m.drop(labels="p1", axis = 1)
     
     
     return m 
