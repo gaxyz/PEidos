@@ -1,6 +1,10 @@
 import setuptools
 
+setup(
 
+    scripts=['bin/funniest-joke'],
+ 
+)
 with open("README.md", "r") as fh:
     long_description = fh.read()
     
@@ -18,5 +22,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: Unix"],
-    python_requires = '>=3.6',    
+    python_requires = '>=3.6',   
+    scripts = ['bin/theoretical-covariance']
     )
