@@ -1,10 +1,10 @@
 import setuptools
 
-setup(
 
-    scripts=['bin/funniest-joke'],
- 
-)
+
+
+
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
     
