@@ -215,6 +215,7 @@ def theoretical_covariance(tree, popsize):
     
     popsize: int.
         (Constant) effectuve population size throughout simulations.
+        
     
     Returns
     -------
@@ -224,7 +225,6 @@ def theoretical_covariance(tree, popsize):
     # Remove outgroup
     
     tree = remove_outgroup(tree)
-    
     init_gen = tree.nodes()[0].generation # Get generation of second split
     
     pops = tree.leaves # List populations

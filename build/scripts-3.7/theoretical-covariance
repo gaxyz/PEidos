@@ -24,7 +24,6 @@ tree = args.inputTree
 N=int(args.popsize)
 firstSplitGen=int(args.firstSplitGen)
 outfile=args.outMatrix
-
 tree = trees.read_tree( tree, firstSplitGen )
 cov_matrix = utils.theoretical_covariance(tree, N)
 cov_matrix.to_csv(outfile, header = False, sep  = " ")
