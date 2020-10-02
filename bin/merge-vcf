@@ -6,16 +6,22 @@ Created on Fri Oct  2 16:20:37 2020
 @author: gaston
 """
 from peidos import utils
+import glob
 import argparse
 
 # Argparse first
-parser = argparse.ArgumentParser( description = "Merge multiple SLiM-outputted, per-sample VCF files into one. This script removes all information from the info field of the original VCF files, so be careful.")
-parser.add_argument("vcf", type = str, nargs = "+", help = "VCF files to be merged")
+parser = argparse.ArgumentParser( description = "Merge multiple SLiM-outputted, per-sample VCF files into one. This script removes all information from the info field of the original VCF files, so be careful. Also, it automatically detects all vcf files in directory.")
 parser.add_argument("--outfile", type = str, help = "output filename. 'merged.vcf' by default.", default = "merged.vcf")
 parser.add_argument("--rmap", type = str , help ="recombination map from SLiM output", default = None  )
 
 args = parser.parse_args()
-vcf_files=args.vcf
+
+
+vcf_files= glob.glob("p*.vcf")
+
+
+
+
 outfile=args.outfile
 
 
