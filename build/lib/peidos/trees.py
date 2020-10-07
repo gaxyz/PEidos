@@ -3,22 +3,31 @@ import dendropy as dp
 
 # Tree functions
 def compute_generation(node,firstSplitTime):
+    
+    if not firstSplitTime:
+        firstSplitTime = 0
+        
     if node.parent_node:
         node.generation = int(node.parent_node.generation) + int(node.edge.length)
     else:
         node.generation = firstSplitTime
 
-def prepare_tree(tree, firstSplitTime):
+            
+            
+            
+def prepare_tree(tree, firstSplitTime ):
     
     """
     Assign labels to internal nodes to properly write an eidos script.
     """
     tree.leaves = []
+
     for node in tree.preorder_node_iter():
         
         if node.label is None:
             new_label = node.taxon.__str__().replace("'","")
             node.label = new_label
+            node.slabel = node.label
         if node.is_leaf():
             node.slabel = node.label
             tree.leaves.append( node.slabel )
@@ -30,6 +39,7 @@ def prepare_tree(tree, firstSplitTime):
         sister_slabels = []
         if node.parent_node: 
             for i in node.parent_node.child_nodes(): 
+                
                 sister_slabels.append( i.slabel )
             
             sister_slabels.sort()

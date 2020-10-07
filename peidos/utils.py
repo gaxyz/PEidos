@@ -7,6 +7,8 @@ import subprocess
 import numpy as np
 
 
+from peidos import trees
+
 class VCF():
     
     def __init__(self):
@@ -206,7 +208,7 @@ def remove_outgroup( tree , outgroup_label = "p1" ):
 
     
 
-def theoretical_covariance(tree, popsize):
+def theoretical_covariance(tree, popsize, rm_outgroup= True):
     """
     Parameters
     ----------
@@ -221,21 +223,30 @@ def theoretical_covariance(tree, popsize):
     -------
     Theoretical covariance matrix for a given tree.
     """
+    # Compute generation times and get leaves
+    tree.leaves = []
+    for node in tree.preorder_node_iter():
+        
+        if node.is_leaf():
+            leaf_label = node.taxon.__str__().replace("'","")
+            node.label = leaf_label
+            tree.leaves.append( leaf_label )
+        trees.compute_generation(node,None)
     
-    # Remove outgroup
+    if rm_outgroup == True:
+        # Remove outgroup
+        tree = remove_outgroup(tree)
+        pops = tree.leaves # List populations
+        pops.remove("p1")
     
-    tree = remove_outgroup(tree)
     init_gen = tree.nodes()[0].generation # Get generation of second split
-    
-    pops = tree.leaves # List populations
-    pops.remove("p1")
     m = np.zeros( ( len(pops),len(pops) ) )   # Matrix for storing distances
     pdm = tree.phylogenetic_distance_matrix() # Compute patristic distances 
     for idx, itx in enumerate(tree.taxon_namespace): # Loop through every leaf twice
         for jdx , jtx in enumerate(tree.taxon_namespace):
             
             # Ignore p1
-            if itx.label == "p1" or jtx.label == "p1":
+            if (itx.label == "p1" or jtx.label == "p1") and rm_outgroup == True:
                 pass
             else:
                 if idx >= jdx:          # As matrix is symmetrical, only compute lower half
