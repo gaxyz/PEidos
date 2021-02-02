@@ -1,4 +1,4 @@
-#!python
+#!/export/home/grijo/miniconda3/envs/slim/bin/python3
 # -*- coding: utf-8 -*-
 """
 Created on Thu Oct  1 16:25:06 2020
@@ -9,21 +9,22 @@ Created on Thu Oct  1 16:25:06 2020
 import argparse
 # Load peidos
 
-from peidos import trees 
+import dendropy as dp
 from peidos import utils as utils
 
 # Argparse first
-parser = argparse.ArgumentParser( description = 'Compute theoretical covariance matricex from nwk tree. Outgroup is excluded and its label assumed to be "p1".')
+parser = argparse.ArgumentParser( description = 'Compute theoretical covariance matricex from tree. Outgroup is excluded and its label assumed to be "p1".')
+parser.add_argument("inputTree", type = str, help = "Input tree in nwk format" )
 parser.add_argument("popsize", type = str, help = "population size" )
-parser.add_argument("firstSplitGen", type = str , help ="generation where the first split occurs (outgroup)"  )
 parser.add_argument("outMatrix", type =str, help = "Output matrix file compatible with hapFLK.", default = "covariance.tab")
 
 args = parser.parse_args()
-N=args.popsize
-firstSplitGen=args.firstSplitGen
+tree = args.inputTree
+N=int(args.popsize)
 outfile=args.outMatrix
 
-tree = trees.read_tree( "serial_splits.nwk", firstSplitGen )
+
+tree = dp.Tree.get(path=tree, schema = "newick")
 cov_matrix = utils.theoretical_covariance(tree, N)
 cov_matrix.to_csv(outfile, header = False, sep  = " ")
 
